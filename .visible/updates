@@ -1,0 +1,7 @@
+- update .3 -
+
+- added netwise   -> network script
+- iprotofetch     -> ip generation script
+- added neofetch  -> neofetch clone 
+- added minifetch -> faster neofetch, less display (repair may be required)
+- added ls        -> file listing (repair may be required)
