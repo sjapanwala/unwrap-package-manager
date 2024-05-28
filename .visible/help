@@ -1,1 +1,10 @@
+Usage: unwrap ^<COMMAND^> [^<ARGS...^>]
 
+COMMAND,
+-?/-help                 shows the help menu, (this menu)
+-install [PKGNAME]       install packages from the unwrap script database
+-init                    initialize the package manager, this is required on first boot
+-upt                     update the packages to install
+-repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
+-search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
+-pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main packages
