@@ -1,3 +1,5 @@
--- UPDATE 0.1 --
-- added netwise -> network application
-- added winfetch -> neofetch clone 
+- update .3 -
+
+- added netwise   -> network application
+- added neofetch  -> neofetch clone 
+- added minifetch -> faster neofetch, less display
