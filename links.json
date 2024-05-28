@@ -1,3 +1,4 @@
 {"google": "www.google.com",
-"winfetch": "https://raw.githubusercontent.com/sjapanwala/winfetch/main/winfetch.cmd",
-"netwise":  "https://raw.githubusercontent.com/sjapanwala/netwise/main/netwise.cmd"}
+"neofetch": "https://raw.githubusercontent.com/sjapanwala/winfetch/main/winfetch.cmd",
+"netwise":  "https://raw.githubusercontent.com/sjapanwala/netwise/main/netwise.cmd",
+"minifetch"  "https://raw.githubusercontent.com/sjapanwala/minifetch/main/minifetch.cmd"}
