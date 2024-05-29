@@ -3,4 +3,5 @@
 "netwise":  "https://raw.githubusercontent.com/sjapanwala/netwise/main/netwise.cmd",
 "minifetch":  "https://raw.githubusercontent.com/sjapanwala/minifetch/main/minifetch.cmd",
 "ls":  "https://raw.githubusercontent.com/sjapanwala/ls-for-win/main/ls.cmd",
-"iprotofetch":  "https://raw.githubusercontent.com/sjapanwala/IProtoFetch/main/iprotofetch.cmd"}
+"iprotofetch":  "https://raw.githubusercontent.com/sjapanwala/IProtoFetch/main/iprotofetch.cmd",
+"winfetch":  "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1"}
