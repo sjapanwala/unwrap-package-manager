@@ -2,10 +2,6 @@
 chcp 65001>nul
 setlocal enabledelayedexpansion
 
-if "%1" == "-repairself" (
-    goto repairself
-)
-
 set cmdres=[0m[[91munwrap[0m]:
 :: get path
 for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username%\.unwrap\.config\config.json' | ConvertFrom-Json)."download_location" "') do (
@@ -74,9 +70,25 @@ if "%1" == "-init" (
 if "%1" == "-upt" (
     goto def_update
 )
+
+if "%1" == "-pkglist" (
+    goto def_list_packages
+)
+
+if "%1" == "-more" (
+    goto def_show_more
+)
+
+if not "%1" == "" (
+    goto defined_error
+) else (
+    echo %cmdres% Arguement Error: No Command Provided
+    echo Try "-?" for help and commands.
+    goto eof
+)
+
 :defined_error
-echo.
-echo %cmdres% Arguement Error: No Optin Given or Invalid Option Given
+echo %cmdres% Arguement Error: "%1" is Too Ambiguous
 echo Try "-?" for help and commands.
 goto eof
 
@@ -133,16 +145,33 @@ if not exist "C:\users\%username%\.unwrap\.config\config.json" (
         echo [0m[[92mGOOD[0m]: Config File
 )
 
+::making the temp file
+echo [0m[[93mSCANNING[0m]: Temp Dir
+if not exist "C:\users\%username%\.unwrap\.temp" (
+    echo [0m[[91mNOTFOUND[0m]
+    echo [0m[[94mCONSTRUCTING[0m]: Temp Dir
+    mkdir "C:\users\%username%\.unwrap\.temp"
+) else (
+        echo [0m[[92mGOOD[0m]: Temp Dir
+)
+
+::temp mem
+::making the temp file
+echo [0m[[93mSCANNING[0m]: Temp Mem
+if not exist "C:\users\%username%\.unwrap\.temp\memory" (
+    echo [0m[[91mNOTFOUND[0m]
+    echo [0m[[94mCONSTRUCTING[0m]: Temp memory
+    mkdir "C:\users\%username%\.unwrap\.temp\memory"
+) else (
+        echo [0m[[92mGOOD[0m]: Temp memory
+)
+
 echo.
 echo Finished!
 goto eof
 
 
 :def_install_packages
-::if not exist C:\users\%username%\.package_links (
-::    echo %cmdres% Initialization Error: Package Links Not Initialized.
-::    echo Try "-init" to complete Initialization Processes.
-::)
 for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username%\.unwrap\.packages\package_links.json' | ConvertFrom-Json)."!package_name!" "') do (
     set "package_link=%%a"
 )
@@ -151,23 +180,100 @@ if not defined package_link (
     echo %cmdres% No Such Package Found
     goto eof
 )
-echo Downloading...
-PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━[0m━━━━━━━━━━━━━━━━━━━━ - Collected Packets, Applying Packets and Installing
-curl -s %package_link%>%converted_location%\%package_name%.cmd
-PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m - Applied Packets and Installing
-echo Successfully Downloaded...
+
+echo Reading Package Links...
+if exist "C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem" (
+    echo [31mSome Packages Already Exist for %package_name%[0m
+)
+echo Verifying Package Life Span...
+echo.
+curl -s %package_link%>"C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+set FILE_PATH="C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+for %%F in (%FILE_PATH%) do set FILE_SIZE=%%~zF
+echo The Following Package Will Be Installed,
+echo    %package_name%:    !FILE_SIZE![32mKB[0m
+:choose_cont
+set choice=""
+set /p choice=Do You Want To Continue? [y/n]: 
+if %choice% == y goto installfile
+if %choice% == Y goto installfile
+if %choice% == N goto wipe_file
+if %choice% == n goto wipe_file
+goto choose_cont
+
+:wipe_file
+echo Install Aborted, Destorying Temp Package
+del "C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+if errorlevel == 0 (
+    echo %cmdres% Temp Packages Destoryed
+    goto eof
+) else (
+    echo %cmdres%: Error in Destorying Temp Packages: Errorlevel %errorlevel%
+    goto eof
+)
+goto eof
+
+:installfile
+echo Installing to Path "%converted_location%"
+echo.
+PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━[0m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+powershell -command "(Get-Content "C:\users\%username%\.unwrap\.temp\%package_name%.unw") | Set-Content "C:\users\%username%\.unwrap\.temp\%package_name%.cmd"
+PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━[0m━━━━━━━━━━━━━━━━━━━━━
+move "C:\users\%username%\.unwrap\.temp\%package_name%.cmd" "%converted_location%">nul
+PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m━━━━━━
+echo memory>"C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem"
+timeout 3 >nul 
+PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+echo.
+echo Finalizing Processes...
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [Checking Location]
+if not exist %converted_location%\%package_name%.cmd (
+    PING -n 1 8.8.8.8 | FIND "TTL=">nul
+    echo [Location not correct, please re-install]
+) else (
+    PING -n 1 8.8.8.8 | FIND "TTL=">nul
+    echo [Location Verified]
+)
+echo [Unpacking Final Processes]
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [Processes Finished, Install Complete!]
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 goto eof
 
 :def_help
-curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/help
+::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/help
+echo Usage: unwrap ^<COMMAND^> [^<ARGS...^>]
+echo.
+echo COMMAND,  ARGS,
+echo -?/-help                 shows the help menu, (this menu)
+echo -install [PKGNAME]       install packages from the unwrap script database
+echo -init                    initialize the package manager, this is required on first boot
+echo -upt                     update the packages to install
+echo -repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
+echo -search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
+echo -pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main packages
+echo                            (requires unwrapy.py package to be installed)
+echo -pkglist                 lists all available packages, ~5mins from updates
+echo -more                    shows more information
 goto eof
 
 :def_update
+curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/notify-update
+:choose_cont2
+set choice=""
+set /p choice=Do You Want To Continue? [y/n]: 
+if %choice% == y goto update_file
+if %choice% == Y goto update_file
+if %choice% == N goto eof
+if %choice% == n goto eof
+goto choose_cont2
+:update_file
 PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━[0m━━━━━━━━━━━━━━━━━━━━ - Collecting Updated Packages
 curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.packages\package_links.json"
 PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m - Applying Collected Packages
 echo.
-curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/updates
+::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/updates
 goto eof    
 
 
@@ -238,10 +344,27 @@ goto eof
 echo nonefound
 goto eof
 
-:repairself
-copy "unwrap.bat" "unwrapmain.cmd"
-powershell -command "(Get-Content "unwrap.bat") | Set-Content "unwrapmain.cmd"
-rename "unwrapmain.cmd" "unwrap.cmd"
-del unwrap.bat
+:def_list_packages
+echo.
+curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/list-packages
+goto eof
 
+:def_show_more
+goto eof
+echo ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀
+echo ⠀⠀⠀⠀⢀⣠⣶⣾⣿⣿⣿⣦⡀⠀⠀⢀⣴⣿⣿⣿⣷⣶⣄⡀⠀⠀
+echo ⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⠿⠛⠉⢠⡄⠉⠛⠿⣿⣿⣿⣿⣿⣿⣷
+echo ⠀⠈⠻⣿⣿⣿⡿⠟⠋⠁⠀⠀⠀⢸⡇⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⠟⠁⠀
+echo ⠀⠀⠀⠈⠋⠁⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠈⠙⠁⠀⠀⠀⠀
+echo ⠀⠀⠀⣰⣷⣦⣄⡀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⢀⣠⣴⣾⣆⠀⠀⠀⠀ 
+echo ⠀⢠⣾⣿⣿⣿⣿⣿⣷⣦⣄⠀⠀⢸⡇⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣷⡄  
+echo ⠀⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠖⠀⠀⠲⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠋⠀⠀ 
+echo ⠀⠀⠀⠀⠉⠛⠿⣿⣿⣿⠟⢁⣴⡇⢸⣦⡈⠻⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀
+echo ⠀⠀⠀⠀⢸⣷⣦⣄⡉⢁⣴⣿⣿⡇⢸⣿⣿⣦⡈⢉⣠⣴⣾⡇⠀
+echo ⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⡿⠟⠋⠁⠀
+echo ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⡇⢸⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀
+echo ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+echo.
+echo welcome to unwrap package manager, a package manager for windows scripts, pyscripts, vimscripts, etc...
+goto eof
 :eof
