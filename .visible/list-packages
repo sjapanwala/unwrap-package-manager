@@ -1,9 +1,15 @@
 As of Update v.4, Available Script Packages
 └─update if packages dont show "unwrap -upt"
+----Windows CMD Scripts---------------------------------------------------------------
+Neofetch Clone, Full Size     | https://github.com/sjapanwala/winfetch
+Minifetch, Nerdfetch Clone    | https://github.com/sjapanwala/minifetch
+LS replica, file lister       | https://github.com/sjapanwala/ls-for-win
+Netwise, Cyber Network Script | https://github.com/sjapanwala/winfetch
+IProtoFetch, IP Generator     | https://github.com/sjapanwala/iprotofetch-public
+----Windows PS1 Scripts---------------------------------------------------------------
+Winfetch, Neofetch Clone      | https://github.com/lptstr/winfetch
+----Python Scripts--------------------------------------------------------------------
+-NONE-
+--------------------------------------------------------------------------------------
 
--> neofetch (cmd script)
--> minifetch (cmd script)
--> ls (cmd script)
--> netwise (cmd script)
--> iprotofetch (cmd script)
--> winfetch (powershell)
+TOTAL 6 - Script Packages
