@@ -3,7 +3,9 @@
 </p>
 
 # download the builder for a flawless experience
-```hello```
+```cmd
+curl https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/builder.cmd -o unwrap_builder.cmd
+```
 
 # downloading the raw file / withot patching, will require manual patching
 ```cmd
