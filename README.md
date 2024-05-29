@@ -1,3 +1,3 @@
 <p align="center">
-<img src="https://github.com/sjapanwala/unwrap-package-manager/assets/92124191/7c8d52e4-ec6a-4d60-bf1b-2dade4fcc9bb">
+<img src="https://github.com/sjapanwala/unwrap-package-manager/assets/92124191/46a79ec5-8e48-4ca7-91a5-e892ac311da7">
 </p>
