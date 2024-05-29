@@ -1,9 +1,9 @@
 As of Update v.4, Available Script Packages
 └─update if packages dont show "unwrap -upt"
 
--> neofetch
--> minifetch
--> ls
--> netwise
--> iprotofetch
-
+-> neofetch (cmd script)
+-> minifetch (cmd script)
+-> ls (cmd script)
+-> netwise (cmd script)
+-> iprotofetch (cmd script)
+-> winfetch (powershell)
