@@ -1,6 +1,11 @@
 @echo off
 chcp 65001>nul
 setlocal enabledelayedexpansion
+
+if "%1" == "-repairself" (
+    goto repairself
+)
+
 set cmdres=[0m[[91munwrap[0m]:
 :: get path
 for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username%\.unwrap\.config\config.json' | ConvertFrom-Json)."download_location" "') do (
@@ -233,5 +238,10 @@ goto eof
 echo nonefound
 goto eof
 
+:repairself
+copy "unwrap.bat" "unwrapmain.cmd"
+powershell -command "(Get-Content "unwrap.bat") | Set-Content "unwrapmain.cmd"
+rename "unwrapmain.cmd" "unwrap.cmd"
+del unwrap.bat
 
 :eof
