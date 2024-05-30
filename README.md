@@ -2,9 +2,7 @@
 <img src="https://github.com/sjapanwala/unwrap-package-manager/assets/92124191/151df451-49d2-49ca-948a-f22d27ea7332" width="350" lenght="350">
 </p>
 
-<div style="text-align: center;">
-  [Features](#what-is-unwrap) | [Commands](#commands) |  [Documentation](#documentation) | [Installation](#installation)
-</div>
+# <center> [Features](#what-is-unwrap) | [Commands](#commands) |  [Documentation](#documentation) | [Installation](#installation)
 
 
 <p align="center">
