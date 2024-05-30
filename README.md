@@ -2,7 +2,7 @@
 <img src="https://github.com/sjapanwala/unwrap-package-manager/assets/92124191/151df451-49d2-49ca-948a-f22d27ea7332" width="350" lenght="350">
 </p>
 
-# <center> [Features](#what-is-unwrap) | [Commands](#commands) |  [Documentation](#documentation) | [Installation](#installation)
+# <center> [Features](#what-is-unwrap) | [Commands](#commands) |  [Documentation](#documentation) | [Installation](#installation) </center>
 
 <p align="center">
 <img src="https://img.shields.io/badge/Version-0.4.1-red">
