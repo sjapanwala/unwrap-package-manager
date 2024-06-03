@@ -1,7 +1,7 @@
-{"google": "www.google.com",
-"neofetch": "https://raw.githubusercontent.com/sjapanwala/winfetch/main/winfetch.cmd",
+{"neofetch": "https://raw.githubusercontent.com/sjapanwala/winfetch/main/winfetch.cmd",
 "netwise":  "https://raw.githubusercontent.com/sjapanwala/netwise/main/netwise.cmd",
 "minifetch":  "https://raw.githubusercontent.com/sjapanwala/minifetch/main/minifetch.cmd",
 "ls":  "https://raw.githubusercontent.com/sjapanwala/ls-for-win/main/ls.cmd",
 "iprotofetch":  "https://raw.githubusercontent.com/sjapanwala/IProtoFetch/main/iprotofetch.cmd",
-"winfetch":  "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1"}
+"winfetch":  "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1",
+"dev1": "https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/1dev.cmd"}
