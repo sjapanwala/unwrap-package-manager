@@ -106,8 +106,8 @@ if "%1" == "-mypkg" (
 if not "%1" == "" (
     goto defined_error
 ) else (
-    echo %cmdres% Arguement Error; No Command Provided
-    echo Try "-?" for help and commands.
+    echo [92mUnwrap V0.4.2, A Package Manager For Scripts
+    echo Please Run Unwrap "-?" for help and commands.[0m
     goto eof
 )
 
@@ -200,7 +200,17 @@ for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username
     set "package_link=%%a"
 )
 
+for %%a in ("%package_link:/=" "%") do (
+    set "filenameext=%%~nxa"
+)
+for %%a in ("%filenameext%") do (
+    set "extension=%%~xa"
+)
+
+if not errorlevel == 0 goto nopackagesfound
+
 if not defined package_link (
+    :nopackagesfound
     echo %cmdres% No Such Package Found
     goto eof
 )
@@ -245,12 +255,15 @@ set FILE_SIZE=!finalSize!
 :: get data for other file info
 for /f "usebackq tokens=*" %%a in (`powershell -command ^
     "Get-ChildItem -Path '%converted_location%' -Recurse -File | Measure-Object -Property Length -Sum | Select-Object -ExpandProperty Sum"`) do (
-    set "targetSizeBefore=%%a"
+    set "targetSizeBefore=%%a"  
 )
 
+
 echo The Following Package(s) Will Be Installed,
-echo    %package_name%:       !FILE_SIZE![32m!unit![0m
+echo    File Name:     !package_name![92m!extension![0m
+echo    File Size:     !FILE_SIZE![92m!unit![0m
 echo    Destination:   !converted_location!
+echo.
 :choose_cont
 set choice=""
 set /p choice=Do You Want To Continue? [y/n]: 
@@ -273,7 +286,7 @@ if errorlevel == 0 (
 goto eof
 
 :installfile
-if exist %converted_location%\%package_name%.cmd (
+if exist %converted_location%\%filenameext% (
     echo [31mScript Already Exists in [92m"%converted_location%"[0m
     :choice
     set choice=l
@@ -287,77 +300,101 @@ if exist %converted_location%\%package_name%.cmd (
 :Overwrite
 echo Installing to Path "%converted_location%"
 echo.
-title ━━━━━━━━━━
+title ━━━━━━━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
-powershell -command "(Get-Content "C:\users\%username%\.unwrap\.temp\%package_name%.unw") | Set-Content "C:\users\%username%\.unwrap\.temp\%package_name%.cmd"
+powershell -command "(Get-Content "C:\users\%username%\.unwrap\.temp\%package_name%.unw") | Set-Content "C:\users\%username%\.unwrap\.temp\%filenameext%"
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 del "C:\users\%username%\.unwrap\.temp\%package_name%.unw"
-title ━━━━━━━━━━━━━━━━━━━
-move "C:\users\%username%\.unwrap\.temp\%package_name%.cmd" "%converted_location%">nul
+title ━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul━
+move "C:\users\%username%\.unwrap\.temp\%filenameext%" "%converted_location%">nul
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
-title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+title ━━━━━━━━━━━━━━━━━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 echo memory>"C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem"
 timeout 3 >nul 
-PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+title ━━━━━━━━━━━━━━━━━━━━━━━━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 title Finished Installing
 echo.
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 echo Finalizing Processes...
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 echo [Checking Location]
-if not exist %converted_location%\%package_name%.cmd (
+if not exist %converted_location%\%filenameext% (
     PING -n 1 8.8.8.8 | FIND "TTL=">nul
     echo [Location not correct, please re-install]
 ) else (
     PING -n 1 8.8.8.8 | FIND "TTL=">nul
     echo [Location Verified]
 )
-echo [Unpacking Final Processes]
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
-echo [Processes Finished, Install Complete!]
+echo [Verifing Data]
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo.
+echo Download Finished ^!
 goto eof
 
 :def_help
 ::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/help
-echo Usage: unwrap ^<COMMAND^> [^<ARGS...^>]
+echo Usage: unwrap ^<COMMAND^> [^<ARGS...^>] [^<-ec^>]
 echo.
-echo COMMAND,   ARGS,
+echo COMMAND,   ARGS,         DESCRIPTION,
 echo.
 echo -?/-help                 shows the help menu, (this menu)
-echo -install [PKGNAME]       install packages from the unwrap script database
 echo -init                    initialize the package manager, this is required on first boot
+echo -install [PKGNAME]       install packages from the unwrap script database
 echo -mypkg                   lists all packages you have installed and thier install Date
 echo -mypkg   [PKGNAME]       checks actuality of a specific package, returns a bool
-echo -pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main package
 echo -pkglist                 lists all available packages, ~5mins from updates
+echo -pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main package
 echo -remove  [PKGNAME]       removes a package thats installed, needs to be in "download_location"
 echo -repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
-
 echo -search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
-
 echo -upt                     update the packages to install
+echo -updatelogs              shows all the update information, dynamic updating
+echo.
+echo Debugging,
+echo -ec                      goes in either the second or third arguement, returns the exit code
 ::echo -more                    shows more information
 goto eof
 
 :def_update
-curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/notify-update
+for %%A in ("C:\users\%username%\.unwrap\.packages\package_links.json*") do (
+    set file_date=%%~tA
+    echo  Last Updated:    !file_date:~0,10!
+)
+curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.temp\package_links.unw"
+for %%F in ("C:\users\%username%\.unwrap\.temp\package_links.unw") do set UPDATE_FILE_SIZE=%%~zF
+for %%F in ("C:\users\%username%\.unwrap\.packages\package_links.json") do set CURR_FILE_SIZE=%%~zF
+echo  Size of Update:  %UPDATE_FILE_SIZE%[92mB[0m
+set /a diff=!UPDATE_FILE_SIZE! - !CURR_FILE_SIZE!
+echo  Size Difference: !diff![92mB[0m
+echo.
 :choose_cont2
 set choice=""
 set /p choice=Do You Want To Continue? [y/n]: 
-if %choice% == y goto update_file
-if %choice% == Y goto update_file
-if %choice% == N goto eof
-if %choice% == n goto eof
+if %choice% == y del "C:\users\%username%\.unwrap\.temp\package_links.unw" && goto update_file
+if %choice% == Y del "C:\users\%username%\.unwrap\.temp\package_links.unw" && goto update_file
+if %choice% == N del "C:\users\%username%\.unwrap\.temp\package_links.unw" && goto eof
+if %choice% == n del "C:\users\%username%\.unwrap\.temp\package_links.unw" && goto eof
 goto choose_cont2
 :update_file
-PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━[0m━━━━━━━━━━━━━━━━━━━━ - Collecting Updated Packages
+title Updating
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━
 curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.packages\package_links.json"
-PING -n 1 8.8.8.8 | FIND "TTL=">nul && echo [31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m - Applying Collected Packages
+PING -n 1 8.8.8.8 | FIND "TTL=">nul 
+title ━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul 
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul 
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 echo.
-::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/updates
+echo Updates Applied
 goto eof    
 
 
@@ -434,17 +471,19 @@ curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main
 goto eof
 
 :def_remove_packages
-if not exist %converted_location%\%package_name%.cmd (
-    echo %cmdres% Locate Error; "%package_name%.cmd" Was Not Found
+if not exist %converted_location%\%filenameext% (
+    echo %cmdres% Locate Error; "%package_name%" Was Not Found
 ) else (
+    :::choice
     ::set choice=
-    ::set /a choice=Remove %package_name%? [y/n] 
+    ::set /p choice=Remove %package_name%? [y/n] 
     ::if %choice% == y goto cont_remove
     ::if %choice% == Y goto cont_remove
     ::if %choice% == N goto eof
     ::if %choice% == n goto eof
+    ::goto choice
     :cont_remove
-    del %converted_location%\%package_name%.cmd>nul
+    del %converted_location%\%package_name%>nul
     PING -n 1 8.8.8.8 | FIND "TTL=">nul
     echo Removing Main Program
     PING -n 1 8.8.8.8 | FIND "TTL=">nul
@@ -465,7 +504,6 @@ if not exist %converted_location%\%package_name%.cmd (
     )
 )
 goto eof
-
 :def_installed_packages
 set counter=0
 echo.
@@ -474,7 +512,7 @@ echo -----------------------------
 for %%A in ("C:\users\%username%\.unwrap\.temp\memory\*") do (
     set /a counter+=1
     set file_date=%%~tA
-    echo  !file_date:~0,10!      %%~nA
+    echo  !file_date:~0,10!      %%~nA      
 )
 echo.
 echo    Total Packages: !counter!
@@ -482,30 +520,27 @@ goto eof
 
 :def_pkg_bool
 if exist C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem (
-    echo Package Actuality: [92mTrue[0m
+    for %%A in ("C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem*") do (
+            set file_date=%%~tA
+        echo Package Actuality: [92mTrue[0m
+        echo Date Created:      !file_date:~0,10!
+    )  
 ) else (
     echo Package Actuality: [91mFalse[0m
+    
 )
 goto eof
 
 
 :def_show_more
 goto eof
-echo ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀
-echo ⠀⠀⠀⠀⢀⣠⣶⣾⣿⣿⣿⣦⡀⠀⠀⢀⣴⣿⣿⣿⣷⣶⣄⡀⠀⠀
-echo ⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⠿⠛⠉⢠⡄⠉⠛⠿⣿⣿⣿⣿⣿⣿⣷
-echo ⠀⠈⠻⣿⣿⣿⡿⠟⠋⠁⠀⠀⠀⢸⡇⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⠟⠁⠀
-echo ⠀⠀⠀⠈⠋⠁⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠈⠙⠁⠀⠀⠀⠀
-echo ⠀⠀⠀⣰⣷⣦⣄⡀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⢀⣠⣴⣾⣆⠀⠀⠀⠀ 
-echo ⠀⢠⣾⣿⣿⣿⣿⣿⣷⣦⣄⠀⠀⢸⡇⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣷⡄  
-echo ⠀⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠖⠀⠀⠲⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠋⠀⠀ 
-echo ⠀⠀⠀⠀⠉⠛⠿⣿⣿⣿⠟⢁⣴⡇⢸⣦⡈⠻⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀
-echo ⠀⠀⠀⠀⢸⣷⣦⣄⡉⢁⣴⣿⣿⡇⢸⣿⣿⣦⡈⢉⣠⣴⣾⡇⠀
-echo ⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⡿⠟⠋⠁⠀
-echo ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⡇⢸⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀
-echo ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-echo.
-echo welcome to unwrap package manager, a package manager for windows scripts, pyscripts, vimscripts, etc...
-goto eof
 :eof
-title %username%
+if "%3" == "-ec" (
+    echo.
+    echo Exited With Code: %errorlevel%
+)
+if "%2" == "-ec" (
+    echo.
+    echo Exited With Code: %errorlevel%
+)
+title %username%@%computername%
