@@ -1,4 +1,4 @@
-# File Structure As Of Version 0.4.1
+# File Structure As Of Version 0.4.2
 ```txt
 .unwrap (root directory)
 ├── (.packages\)
