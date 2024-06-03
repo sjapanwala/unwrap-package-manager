@@ -9,6 +9,7 @@
 <img src="https://img.shields.io/badge/Version-0.4.2-red">
 <img src="https://img.shields.io/badge/Windows-11-green">
 <img src="https://img.shields.io/badge/Pure_Batch-blue">
+<img src="https://img.shields.io/badge/Active_Development-green">
 </p>
 
 ## What Is Unwrap?
