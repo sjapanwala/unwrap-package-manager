@@ -1,24 +1,19 @@
-# As Of Version 0.4.1
-```
-Prefix       Command  ARGS    
+Usage: unwrap <COMMAND> [<ARGS...>] [<-ec>]
 
+COMMAND,   ARGS,         DESCRIPTION,
 
-unwrap      -install [PKGNAME]  
-                -> installs packages
-unwrap      -init               
-                -> initializes directories / (can be done in builder)
-unwrap      -upt                
-                -> updates packages database
-unwrap      -repair [filename]  
-                -> repairs a script (fixes encoding, file needs to be in same dir as in config)
-unwrap      -search [PKGNAME]  
-                -> searches your package link file for a specific package, user may need to update (unwrap -upt)
-unwrap      -pkgpush [FILENAME] 
-                -> push a userbuilt script to the package database
-                - more: 
-                    - makes a custom package json file 
-                    - with current packages and your packages
-                    - make sure to (unwrap -upt) before (unwrap -pkgpush)
-                    - !! REQUIRES UNWRAP_PY_PUSH.py !!
-unwrap      -pkglist             -> lists all the packages in the json link file, your packages and source packages may not be aligned
-```
+-?/-help                 shows the help menu, (this menu)
+-init                    initialize the package manager, this is required on first boot
+-install [PKGNAME]       install packages from the unwrap script database
+-mypkg                   lists all packages you have installed and thier install Date
+-mypkg   [PKGNAME]       checks actuality of a specific package, returns a bool
+-pkglist                 lists all available packages, ~5mins from updates
+-pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main package
+-remove  [PKGNAME]       removes a package thats installed, needs to be in "download_location"
+-repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
+-search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
+-upt                     update the packages to install
+-updatelogs              shows all the update information, dynamic updating
+
+Debugging,
+-ec                      goes in either the second or third arguement, returns the exit code
