@@ -6,9 +6,9 @@
 
 
 <p align="center">
-<img src="https://img.shields.io/badge/Version-0.4.1-red">
+<img src="https://img.shields.io/badge/Version-0.4.2-red">
 <img src="https://img.shields.io/badge/Windows-11-green">
-<img src="https://img.shields.io/badge/Windows-10-green">
+<img src="https://img.shields.io/badge/Pure_Batch-blue">
 </p>
 
 ## What Is Unwrap?
