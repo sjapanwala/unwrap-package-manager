@@ -1,3 +1,4 @@
+```txt
 Usage: unwrap <COMMAND> [<ARGS...>] [<-ec>]
 
 COMMAND,   ARGS,         DESCRIPTION,
@@ -17,3 +18,4 @@ COMMAND,   ARGS,         DESCRIPTION,
 
 Debugging,
 -ec                      goes in either the second or third arguement, returns the exit code
+```
