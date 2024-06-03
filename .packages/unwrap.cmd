@@ -370,9 +370,15 @@ for %%A in ("C:\users\%username%\.unwrap\.packages\package_links.json*") do (
 curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.temp\package_links.unw"
 for %%F in ("C:\users\%username%\.unwrap\.temp\package_links.unw") do set UPDATE_FILE_SIZE=%%~zF
 for %%F in ("C:\users\%username%\.unwrap\.packages\package_links.json") do set CURR_FILE_SIZE=%%~zF
-echo  Size of Update:  %UPDATE_FILE_SIZE%[92mB[0m
 set /a diff=!UPDATE_FILE_SIZE! - !CURR_FILE_SIZE!
+echo  Update Size:     !UPDATE_FILE_SIZE![92mB[0m
 echo  Size Difference: !diff![92mB[0m
+echo.
+if !diff! gtr 0 (
+    echo  [92mUpdate Available[0m
+) else (
+    echo  [91mNo Updates Since Last Update[0m
+)
 echo.
 :choose_cont2
 set choice=""
