@@ -1,17 +1,12 @@
-✅ - Version 0.4.1
+✅ - Version 0.4.2
 -- Package Update --
-    - added netwise   -> network script
-    - iprotofetch     -> ip generation script
-    - added neofetch  -> neofetch clone 
-    - added minifetch -> faster neofetch, less display (repair may be required)
-    - added ls        -> file listing (repair may be required)
+    - added dev package 1
+    - added unwrap main file
 
 -- Command Update --
-    - added "unwrap -mypkg"  -> shows your installed packages, adding a package name checks if it exists (bool)
-    - added "unwrap -remove" -> removes a package and its seeded files
+    - unwrap -remove fixed, added better layout with file size returns
 
 -- Minor Bug Fixes --
-    - defrentiated between arguement void error, and arguement ambiguity error
-    - "unwrap -search" else statement not fixed (unknown cause, returns "The syntax of the command is incorrect." next fix)
-
+    - turned void error into information on the program
+    
 -- 🚂💨 End of Updates --
