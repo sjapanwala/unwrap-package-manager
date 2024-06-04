@@ -117,77 +117,92 @@ echo Try "-?" for help and commands.
 goto eof
 
 :def_init
-echo [0m[[92mINIT[0m]:Starting Initialization...
+echo.
+echo [97m ^> [93m Initializing File Structure [0m
 
 :: checking if the root directory exists
-echo [0m[[93mSCANNING[0m]: Root Dir
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m .unwrap [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Root Dir
+    echo [97m ^> [91m NotFound [97m .unwrap [0m
+    echo [97m ^> [93m Building [97m .unwrap [0m
     mkdir "C:\users\%username%\.unwrap"
 ) else (
-    echo [0m[[92mGOOD[0m]: Root Dir
+    echo [97m ^> [92m   Good   [97m .unwrap [0m
 )
 
 :: checking if the packages directory exists
-echo [0m[[93mSCANNING[0m]: Package Dir
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m .packages [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.packages" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Package Links
+    echo [97m ^> [91m NotFound [97m .packages [0m
+    echo [97m ^> [93m Building [97m .packages [0m
     mkdir "C:\users\%username%\.unwrap\.packages"
 ) else (
-        echo [0m[[92mGOOD[0m]: Packages Dir
+         echo [97m ^> [92m   Good   [97m .packages [0m
 )
 
 :: making the packages
-echo [0m[[93mSCANNING[0m]: Package Links
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m Package Links [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.packages\package_links.json" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Package Links
+    echo [97m ^> [91m NotFound [97m Package Links [0m
+    echo [97m ^> [93m Building [97m Package Links [0m
     curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.packages\package_links.json"
 ) else (
-        echo [0m[[92mGOOD[0m]: Packages
+        echo [97m ^> [92m   Good   [97m Package Links [0m
 )
 
-:: making the config dir
-echo [0m[[93mSCANNING[0m]: Config Dir
+:: making the config 
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m .config [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.config" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Config Dir
+    echo [97m ^> [91m NotFound [97m .config [0m
+    echo [97m ^> [93m Building [97m .config [0m
     mkdir "C:\users\%username%\.unwrap\.config"
 ) else (
-        echo [0m[[92mGOOD[0m]: Config Dir
+        echo [97m ^> [92m   Good   [97m .config [0m
 )
 
 ::making the config file
-echo [0m[[93mSCANNING[0m]: Config File
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m config.json [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.config\config.json" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Config File
+    echo [97m ^> [91m NotFound [97m config.json [0m
+    echo [97m ^> [93m Building [97m config.json [0m
     echo {"download_location": "C:\\Users\\auser\\Downloads"}>"C:\users\%username%\.unwrap\.config\config.json"
 ) else (
-        echo [0m[[92mGOOD[0m]: Config File
+        echo [97m ^> [92m   Good   [97m config.json [0m
 )
 
 ::making the temp file
-echo [0m[[93mSCANNING[0m]: Temp Dir
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m .temp [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.temp" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Temp Dir
+    echo [97m ^> [91m NotFound [97m .temp [0m
+    echo [97m ^> [93m Building [97m .temp [0m
     mkdir "C:\users\%username%\.unwrap\.temp"
 ) else (
-        echo [0m[[92mGOOD[0m]: Temp Dir
+        echo [97m ^> [92m   Good   [97m .temp [0m
 )
 
 ::temp mem
 ::making the temp file
-echo [0m[[93mSCANNING[0m]: Temp Mem
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+echo [97m ^> [94m Scanning [97m temp\memory [0m
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.temp\memory" (
-    echo [0m[[91mNOTFOUND[0m]
-    echo [0m[[94mCONSTRUCTING[0m]: Temp memory
+    echo [97m ^> [91m NotFound [97m temp\memory [0m
+    echo [97m ^> [93m Building [97m temp\memory [0m
     mkdir "C:\users\%username%\.unwrap\.temp\memory"
 ) else (
-        echo [0m[[92mGOOD[0m]: Temp memory
+        echo [97m ^> [92m   Good   [97m temp\memory [0m
 )
 
 echo.
@@ -343,6 +358,7 @@ goto eof
 echo Usage: unwrap ^<COMMAND^> [^<ARGS...^>] [^<-ec^>]
 echo.
 echo COMMAND,   ARGS,         DESCRIPTION,
+echo --------   -----         ------------
 echo.
 echo -?/-help                 shows the help menu, (this menu)
 echo -init                    initialize the package manager, this is required on first boot
@@ -377,7 +393,7 @@ echo.
 if !diff! gtr 0 (
     echo  [92mUpdate Available[0m
 ) else (
-    echo  [91mNo Updates Since Last Update[0m
+    echo  [91mNo Changes Since Last Update[0m
 )
 echo.
 :choose_cont2
@@ -477,38 +493,58 @@ curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main
 goto eof
 
 :def_remove_packages
-if not exist %converted_location%\%filenameext% (
-    echo %cmdres% Locate Error; "%package_name%" Was Not Found
-) else (
-    :::choice
-    ::set choice=
-    ::set /p choice=Remove %package_name%? [y/n] 
-    ::if %choice% == y goto cont_remove
-    ::if %choice% == Y goto cont_remove
-    ::if %choice% == N goto eof
-    ::if %choice% == n goto eof
-    ::goto choice
-    :cont_remove
-    del %converted_location%\%package_name%>nul
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    echo Removing Main Program
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    del C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem>nul
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    echo Removing Memory File
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    echo Removing Traces
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    echo Removing Paths
-    PING -n 1 8.8.8.8 | FIND "TTL=">nul
-    if %errorlevel% == 0 (
-        echo %package_name% Was Successfully Removed
-        goto eof
-    ) else (
-        echo An Error Occured
-        goto eof
-    )
+for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username%\.unwrap\.packages\package_links.json' | ConvertFrom-Json)."!package_name!" "') do (
+    set "package_link=%%a"
 )
+for %%a in ("%package_link:/=" "%") do (
+    set "filenameext=%%~nxa"
+)
+for %%a in ("%filenameext%") do (
+    set "extension=%%~xa"
+)
+if not exist %converted_location%\%filenameext% (
+    echo %cmdres% No Such Package Found
+    goto eof
+)
+if not defined package_link (
+     echo %cmdres% No Such Package Found
+    goto eof
+)  
+curl -s %package_link%>"C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+set FILE_PATH="C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+for %%F in (%FILE_PATH%) do set FILE_SIZE=%%~zF
+del "C:\users\%username%\.unwrap\.temp\%package_name%.unw"
+:prompt_remove
+echo The Following Package(s) Will Be Removed,
+echo Package Name: %package_name%
+echo Space Gained: %FILE_SIZE%[92mB[0m
+echo.
+:remove_choice
+set choice=.
+set /p choice=Do You Want To Continue? [y/n]: 
+if %choice% == y goto del_packages
+if %choice% == Y goto del_packages
+if %choice% == N goto eof
+if %choice% == n goto eof
+goto remove_choice
+:del_packages
+del %converted_location%\%filenameext%
+del "C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem"
+echo.
+title ━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
+title ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+echo Successfully Removed %package_name%
 goto eof
 :def_installed_packages
 set counter=0
@@ -541,12 +577,23 @@ goto eof
 :def_show_more
 goto eof
 :eof
-if "%3" == "-ec" (
+if "%1" == "-ec" (
     echo.
-    echo Exited With Code: %errorlevel%
+    echo [47m * [41m Exited With Code: %errorlevel% [0m
 )
 if "%2" == "-ec" (
     echo.
-    echo Exited With Code: %errorlevel%
+    echo [47m * [41m Exited With Code: %errorlevel% [0m
+)
+if "%3" == "-ec" (
+    echo.
+    echo [47m * [41m Exited With Code: %errorlevel% [0m
+) 
+if "%4" == "-ec" (
+    echo.
+    echo [47m * [41m Exited With Code: %errorlevel% [0m
 )
 title %username%@%computername%
+echo.
+
+:: the actual end of the program
