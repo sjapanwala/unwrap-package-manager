@@ -532,7 +532,7 @@ del %converted_location%\%filenameext%
 del "C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem"
 echo.
 title ━━━━━━━━━━━━━
-PING -n 1 8.8.8.8 | FIND "TTL=">nul━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 title ━━━━━━━━━━━━━━━━━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
