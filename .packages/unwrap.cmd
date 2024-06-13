@@ -8,6 +8,7 @@ set cmdres=[0m[[91munwrap[0m]:
 for /f "tokens=*" %%a in ('powershell -Command "(Get-Content 'C:\users\%username%\.unwrap\.config\config.json' | ConvertFrom-Json)."download_location" "') do (
     set "download_location=%%a"
 )
+
 REM Sample string containing an object
 set "convert=%download_location%"
 
@@ -103,17 +104,65 @@ if "%1" == "-mypkg" (
 )
 
 :: add arg headers before this
+if "%1" == "-sm" goto inform
 if not "%1" == "" (
     goto defined_error
 ) else (
-    echo [92mUnwrap V0.4.2, A Package Manager For Scripts
-    echo Please Run Unwrap "-?" for help and commands.[0m
+    :inform
+    echo [92mUnwrap V0.4.3, A Script Manager
+    echo Please Run '[32munwrap -?[92m' for help and commands.[0m
+    if "%1" == "-sm" goto showmore
+    goto eof
+    :showmore
+    FOR /F %%a IN ('curl -s https://ipv4.icanhazip.com/') DO set localip=%%a
+    for %%A in ("%~f0") do set main_date=%%~tA
+    echo.
+    echo [0mProgram Information,
+    echo [0mAuthor        - [92msjapanwala
+    echo [0mCreation      - [92m05/27/2024
+    echo [0mReadMe        - [92mhttps://shorturl.at/IQCe6
+    echo [0mLicense       - [92mMIT[0m
+    echo.
+    echo [0mLocal Information,
+    echo [0mCall Point    - [92m!localip!
+    echo [0mCall User     - [92m%username%@%computername%
+    echo.
+    echo [0mLocal Program Information,
+    echo [0mDate Installed - [92m!main_date!
+    echo [0mInstall Path   - [92m!cd![0m
     goto eof
 )
 
 :defined_error
-echo %cmdres% Arguement Error; "%1" is Too Ambiguous
-echo Try "-?" for help and commands.
+echo %cmdres% Arguement Error; '%1' is Not An Unwrap Command.
+echo           Try 'uwnrap -?' for help and commands.
+goto eof
+
+
+:def_help
+::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/help
+echo Usage: unwrap -COMMAND [ARGS...] -ec
+echo.
+echo COMMAND,   ARGS,         DESCRIPTION,
+echo --------   -----         ------------
+echo.
+echo -?/-help                 shows the help menu, (this menu)
+echo -sm                      shows more about the program
+echo -init                    initialize the package manager, this is required on first boot
+echo -install [PKGNAME]       install packages from the unwrap script database
+echo -mypkg                   lists all packages you have installed and thier install Date
+echo -mypkg   [PKGNAME]       checks actuality of a specific package, returns a bool
+echo -pkglist                 lists all available packages, ~5mins from updates
+echo -pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main package
+echo -remove  [PKGNAME]       removes a package thats installed, needs to be in "download_location"
+echo -repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
+echo -search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
+echo -upt                     update the packages to install
+echo -updatelogs              shows all the update information, dynamic updating
+echo.
+echo Debugging,
+echo -ec                      goes in either the second or third arguement, returns the exit code
+::echo -more                    shows more information
 goto eof
 
 :def_init
@@ -121,13 +170,19 @@ echo.
 echo [97m ^> [93m Initializing File Structure [0m
 
 :: checking if the root directory exists
+set modcounter=0
+set errorcounter=0
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 echo [97m ^> [94m Scanning [97m .unwrap [0m
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap" (
     echo [97m ^> [91m NotFound [97m .unwrap [0m
     echo [97m ^> [93m Building [97m .unwrap [0m
+    set /a modcounter+=1
     mkdir "C:\users\%username%\.unwrap"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
     echo [97m ^> [92m   Good   [97m .unwrap [0m
 )
@@ -139,7 +194,11 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.packages" (
     echo [97m ^> [91m NotFound [97m .packages [0m
     echo [97m ^> [93m Building [97m .packages [0m
+    set /a modcounter+=1
     mkdir "C:\users\%username%\.unwrap\.packages"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
          echo [97m ^> [92m   Good   [97m .packages [0m
 )
@@ -151,7 +210,11 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.packages\package_links.json" (
     echo [97m ^> [91m NotFound [97m Package Links [0m
     echo [97m ^> [93m Building [97m Package Links [0m
+    set /a modcounter+=1
     curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.packages/packages.json>"C:\users\%username%\.unwrap\.packages\package_links.json"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
         echo [97m ^> [92m   Good   [97m Package Links [0m
 )
@@ -163,7 +226,11 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.config" (
     echo [97m ^> [91m NotFound [97m .config [0m
     echo [97m ^> [93m Building [97m .config [0m
+    set /a modcounter+=1
     mkdir "C:\users\%username%\.unwrap\.config"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
         echo [97m ^> [92m   Good   [97m .config [0m
 )
@@ -175,7 +242,11 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.config\config.json" (
     echo [97m ^> [91m NotFound [97m config.json [0m
     echo [97m ^> [93m Building [97m config.json [0m
+    set /a modcounter+=1
     echo {"download_location": "C:\\Users\\auser\\Downloads"}>"C:\users\%username%\.unwrap\.config\config.json"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
         echo [97m ^> [92m   Good   [97m config.json [0m
 )
@@ -187,7 +258,11 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.temp" (
     echo [97m ^> [91m NotFound [97m .temp [0m
     echo [97m ^> [93m Building [97m .temp [0m
+    set /a modcounter+=1
     mkdir "C:\users\%username%\.unwrap\.temp"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
         echo [97m ^> [92m   Good   [97m .temp [0m
 )
@@ -200,13 +275,17 @@ PING -n 1 8.8.8.8 | FIND "TTL=">nul
 if not exist "C:\users\%username%\.unwrap\.temp\memory" (
     echo [97m ^> [91m NotFound [97m temp\memory [0m
     echo [97m ^> [93m Building [97m temp\memory [0m
+    set /a modcounter+=1
     mkdir "C:\users\%username%\.unwrap\.temp\memory"
+    if not !errorlevel! == 0 (
+        set /a errorcounter+=1
+    )
 ) else (
         echo [97m ^> [92m   Good   [97m temp\memory [0m
 )
 
 echo.
-echo Finished!
+echo Process Finished With !errorcounter! Errors; Modified !modcounter! Files
 goto eof
 
 
@@ -225,8 +304,9 @@ for %%a in ("%filenameext%") do (
 if not errorlevel == 0 goto nopackagesfound
 
 if not defined package_link (
-    :nopackagesfound
-    echo %cmdres% No Such Package Found
+    :nopackagesfound 
+    echo %cmdres% Define Error; '%package_name%' Does Not Exist
+    echo           Please Check Package Name or Try 'unwrap -upt'
     goto eof
 )
 
@@ -292,7 +372,7 @@ goto choose_cont
 echo Install Aborted, Destorying Temp Package
 del "C:\users\%username%\.unwrap\.temp\%package_name%.unw"
 if errorlevel == 0 (
-    echo %cmdres% Temp Packages Destoryed
+    echo Temp Packages Destoryed
     goto eof
 ) else (
     echo %cmdres%: Error in Destorying Temp Packages: Errorlevel %errorlevel%
@@ -321,7 +401,7 @@ powershell -command "(Get-Content "C:\users\%username%\.unwrap\.temp\%package_na
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 del "C:\users\%username%\.unwrap\.temp\%package_name%.unw"
 title ━━━━━━━━━━━━━
-PING -n 1 8.8.8.8 | FIND "TTL=">nul━
+PING -n 1 8.8.8.8 | FIND "TTL=">nul
 move "C:\users\%username%\.unwrap\.temp\%filenameext%" "%converted_location%">nul
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 title ━━━━━━━━━━━━━━━━━
@@ -351,31 +431,6 @@ echo [Verifing Data]
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 echo.
 echo Download Finished ^!
-goto eof
-
-:def_help
-::curl -s https://raw.githubusercontent.com/sjapanwala/unwrap-package-manager/main/.visible/help
-echo Usage: unwrap ^<COMMAND^> [^<ARGS...^>] [^<-ec^>]
-echo.
-echo COMMAND,   ARGS,         DESCRIPTION,
-echo --------   -----         ------------
-echo.
-echo -?/-help                 shows the help menu, (this menu)
-echo -init                    initialize the package manager, this is required on first boot
-echo -install [PKGNAME]       install packages from the unwrap script database
-echo -mypkg                   lists all packages you have installed and thier install Date
-echo -mypkg   [PKGNAME]       checks actuality of a specific package, returns a bool
-echo -pkglist                 lists all available packages, ~5mins from updates
-echo -pkgpush [FILENAME]      upload a package to a custom database, which can be sent to main package
-echo -remove  [PKGNAME]       removes a package thats installed, needs to be in "download_location"
-echo -repair  [FILENAME]      use this command to repair the encoding (if a file doesnt work)
-echo -search  [PKGNAME]       search for packages, if none found, try "unwrap -upt"
-echo -upt                     update the packages to install
-echo -updatelogs              shows all the update information, dynamic updating
-echo.
-echo Debugging,
-echo -ec                      goes in either the second or third arguement, returns the exit code
-::echo -more                    shows more information
 goto eof
 
 :def_update
@@ -532,7 +587,7 @@ del %converted_location%\%filenameext%
 del "C:\users\%username%\.unwrap\.temp\memory\%package_name%.mem"
 echo.
 title ━━━━━━━━━━━━━
-PING -n 1 8.8.8.8 | FIND "TTL=">nul
+PING -n 1 8.8.8.8 | FIND "TTL=">nul━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
 title ━━━━━━━━━━━━━━━━━
 PING -n 1 8.8.8.8 | FIND "TTL=">nul
@@ -554,7 +609,7 @@ echo -----------------------------
 for %%A in ("C:\users\%username%\.unwrap\.temp\memory\*") do (
     set /a counter+=1
     set file_date=%%~tA
-    echo  !file_date:~0,10!      %%~nA      
+    echo  !file_date:~0,10!      %%~nA   
 )
 echo.
 echo    Total Packages: !counter!
@@ -576,6 +631,15 @@ goto eof
 
 :def_show_more
 goto eof
+set counter=0
+for %%A in ("C:\users\%username%\.unwrap\.temp\memory\*") do (
+    set /a counter+=1
+    echo 12
+)
+echo Total Packages Downloaded: %counter%
+goto eof
+
+
 :eof
 if "%1" == "-ec" (
     echo.
